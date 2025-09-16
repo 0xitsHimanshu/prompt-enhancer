@@ -1,0 +1,248 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Monorepo and Project Structure",
+        "description": "Set up the Turborepo monorepo with Next.js 15 (App Router), tRPC, Bun runtime, Prisma, and Postgres according to the PRD technical specs.",
+        "details": "Use Turborepo to scaffold a monorepo containing packages for backend API, web playground, VS Code extension, and browser extension. Configure Bun as the runtime. Set up Next.js 15 with App Router for frontend and backend. Initialize Prisma with the provided PromptLog model and connect to a Postgres database.",
+        "testStrategy": "Verify that all packages build and run independently. Confirm database connectivity and schema migration for PromptLog.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement Backend API for Prompt Enhancement",
+        "description": "Develop the `/api/enhance` endpoint using tRPC and Next.js, integrating with OpenAI and Anthropic for prompt enhancement.",
+        "details": "Create a tRPC router with an `enhance` procedure accepting `{ prompt: string, model?: string }`. Integrate OpenAI and Anthropic APIs via an abstract provider layer. Ensure LLM-agnostic switching based on the `model` parameter. Return `{ enhanced: string }`.",
+        "testStrategy": "Unit test API with mock LLM responses. Integration test with real OpenAI/Anthropic endpoints. Validate error handling and response format.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up tRPC in Next.js Project",
+            "description": "Install required dependencies and configure tRPC within the Next.js backend, including strict mode and input validation setup.",
+            "dependencies": [],
+            "details": "Install @trpc/server, @trpc/client, @trpc/react-query, @trpc/next, and zod. Enable strict mode in tsconfig.json. Initialize tRPC backend and create a basic router structure.\n<info added on 2025-09-16T09:16:45.924Z>\nAdd the following files and implement the provider abstraction for LLMs:\n\n- apps/server/src/services/llm/types.ts: Define the LLMProvider interface with an enhance(prompt: string, options?: ProviderOptions) method, and ProviderOptions type with optional model property.\n- apps/server/src/services/llm/openai.ts: Implement OpenAIProvider using fetch, reading OPENAI_API_KEY from environment. If missing, throw a typed TRPCError('INTERNAL_SERVER_ERROR') with a clear message. The enhance method should call the OpenAI API and return { enhanced }.\n- apps/server/src/services/llm/anthropic.ts: Implement AnthropicProvider using fetch, reading ANTHROPIC_API_KEY from environment. If missing, throw a typed TRPCError('INTERNAL_SERVER_ERROR') with a clear message. The enhance method should call the Anthropic API and return { enhanced }.\n- apps/server/src/services/llm/index.ts: Export selectProvider(model?: string) that chooses the provider based on model prefix (\"gpt\" for OpenAI, \"claude\" for Anthropic), with a default provider fallback.\n\nEdit the router to add the enhance mutation:\n\n- apps/server/src/routers/index.ts: Add an enhance mutation with input validated by z.object({ prompt: z.string().min(1), model: z.string().optional() }). On call, select the provider using selectProvider(model), invoke provider.enhance(prompt, { model }), and return { enhanced }.\n\nNotes:\n\n- Use early returns and Zod validation for input and error handling.\n- Ensure all functions are verbose and readable, following TypeScript best practices.\n- Expect environment variables OPENAI_API_KEY and ANTHROPIC_API_KEY to be set.\n- No changes needed in apps/server/src/lib/context.ts.\n- Testing will be handled in a later subtask.\n</info added on 2025-09-16T09:16:45.924Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Abstract Provider Layer for LLMs",
+            "description": "Design and implement an abstraction layer to support switching between OpenAI and Anthropic based on the model parameter.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Create a provider interface for LLMs. Implement adapters for OpenAI and Anthropic. Ensure provider selection logic is based on the model input.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate OpenAI and Anthropic APIs",
+            "description": "Connect the abstract provider layer to OpenAI and Anthropic APIs, handling authentication, request formatting, and response parsing.",
+            "dependencies": [
+              "2.2"
+            ],
+            "details": "Implement API clients for OpenAI and Anthropic. Handle API keys securely. Map provider responses to the expected output format.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement tRPC Enhance Procedure",
+            "description": "Develop the tRPC 'enhance' procedure to accept input, invoke the appropriate provider, and return the enhanced prompt.",
+            "dependencies": [
+              "2.3"
+            ],
+            "details": "Define the enhance procedure schema using zod. Route requests to the correct provider. Return { enhanced: string } in the response.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Write Unit and Integration Tests for API",
+            "description": "Create comprehensive unit tests for the enhance procedure and provider layer, and integration tests with real OpenAI/Anthropic endpoints.",
+            "dependencies": [
+              "2.4"
+            ],
+            "details": "Mock LLM responses for unit tests. Validate error handling and response format. Perform integration tests with live endpoints to ensure reliability.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Develop Web Playground Frontend",
+        "description": "Build a Next.js 15 web app for users to test prompt enhancement and view raw vs enhanced prompts side-by-side.",
+        "details": "Implement a UI with two text areas (raw and enhanced), an 'Enhance' button, and preview/accept/replace workflow. Connect to the backend `/api/enhance` endpoint via tRPC. Ensure minimal UI footprint and responsive design.",
+        "testStrategy": "End-to-end test: input raw prompt, click enhance, verify enhanced prompt appears. UI snapshot tests for layout and workflow.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Responsive UI Layout",
+            "description": "Create a minimal, responsive UI in Next.js 15 featuring two side-by-side text areas for raw and enhanced prompts, an 'Enhance' button, and preview/accept/replace controls.",
+            "dependencies": [],
+            "details": "Ensure the layout adapts to different screen sizes and maintains a clean, accessible design. Use the app directory and component organization best practices for scalability.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Integrate Enhance Workflow with Backend",
+            "description": "Implement the frontend logic to connect the UI to the `/api/enhance` endpoint using tRPC, handling prompt submission and response display.",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "Wire up the 'Enhance' button to send the raw prompt to the backend, receive the enhanced prompt, and update the UI accordingly. Handle loading, error, and success states.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Preview, Accept, and Replace Functionality",
+            "description": "Develop the workflow allowing users to preview the enhanced prompt, accept it, or replace the raw prompt with the enhanced version.",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "Ensure seamless transitions between states and provide clear user feedback. Maintain state consistency and support undo/redo if feasible.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Conduct End-to-End and UI Snapshot Testing",
+            "description": "Write and execute end-to-end tests covering the full prompt enhancement workflow and UI snapshot tests to verify layout and interactions.",
+            "dependencies": [
+              "3.3"
+            ],
+            "details": "Test inputting a raw prompt, enhancing it, previewing, accepting, and replacing. Validate responsiveness and minimal UI footprint across devices.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Create VS Code Extension with Enhance Button",
+        "description": "Develop a VS Code extension that injects an 'Enhance' button into Copilot/chat panels, calling the backend API for prompt enhancement.",
+        "details": "Use Yeoman generator to scaffold a TypeScript VS Code extension. Inject UI into chat panels using VS Code API. On button click, send the current prompt to `/api/enhance` and display the enhanced prompt with preview/accept/replace options. Bundle with webpack for web compatibility.",
+        "testStrategy": "Manual test in VS Code Extension Development Host: write prompt, click enhance, verify enhanced prompt replaces or previews. Automated tests for command registration and API calls.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Develop Browser Extension for Context Menu Enhancement",
+        "description": "Build a browser extension that adds a right-click 'Enhance with AI' context menu, sending selected text to the backend API and displaying the result.",
+        "details": "Use Manifest V3 for Chrome/Edge/Firefox compatibility. Implement context menu action to capture selected text, call `/api/enhance`, and show enhanced prompt in a popup or replace text. Ensure HTTPS communication with backend.",
+        "testStrategy": "Manual test in supported browsers: highlight text, right-click, enhance, verify popup or replacement. Automated tests for context menu and API integration.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement AI Service Provider Abstraction Layer",
+        "description": "Create an abstraction layer in the backend to support switching between OpenAI, Anthropic, and future local models (Ollama, llama.cpp).",
+        "details": "Design a provider interface for LLMs. Implement adapters for OpenAI and Anthropic. Stub out local model integration for future expansion. Ensure provider selection based on API input.",
+        "testStrategy": "Unit test provider selection and response mapping. Integration test with each supported provider.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Integrate Prompt Logging with Prisma and Postgres",
+        "description": "Add optional prompt history feature to store raw and enhanced prompts in the database using the provided Prisma model.",
+        "details": "Extend backend API to log each enhancement to Postgres via Prisma. Store userId (if available), raw, enhanced, model, and timestamp. Ensure logging is optional for MVP but core for future growth.",
+        "testStrategy": "Unit test database writes. Integration test with API calls to confirm logs are created. Validate schema against PRD.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Design and Implement Minimal UI/UX for Extensions",
+        "description": "Ensure both VS Code and browser extensions follow the one-click, preview/accept/replace workflow with minimal UI footprint.",
+        "details": "Review extension UIs for clutter. Implement preview and accept/replace options. Use native UI components where possible. Document UX decisions for consistency.",
+        "testStrategy": "User acceptance testing with target personas. Heuristic evaluation for minimalism and workflow adherence.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Setup Deployment Pipeline for Backend and Extensions",
+        "description": "Configure deployment for backend (Vercel/Render/Fly.io) and package/distribute VS Code and browser extensions.",
+        "details": "Set up CI/CD for backend using Vercel/Render/Fly.io. Automate extension packaging and publishing (VS Code Marketplace, Chrome Web Store). Ensure HTTPS and environment variable management.",
+        "testStrategy": "Deploy backend and verify endpoint availability. Publish extensions and validate installation/update flows.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Document API, Extensions, and Developer Setup",
+        "description": "Produce comprehensive documentation for API usage, extension installation, developer onboarding, and future enhancement guidelines.",
+        "details": "Write README files for each package. Document API endpoints, extension usage, setup instructions, and architecture decisions. Include contribution guidelines and future roadmap.",
+        "testStrategy": "Peer review documentation for completeness and clarity. Validate setup instructions by onboarding a new developer.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-16T09:10:26.908Z",
+      "updated": "2025-09-16T09:52:45.152Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

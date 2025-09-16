@@ -1,0 +1,13 @@
+---
+globs: apps/web/**.ts,apps/web/**.tsx,apps/web/**.css
+---
+# Web App (Next.js, Tailwind, shadcn/ui)
+
+- Use App Router patterns in `apps/web/src/app/**`.
+- Global styles in [apps/web/src/index.css](mdc:apps/web/src/index.css) must remain minimal; prefer component-scoped styles.
+- Use shadcn/ui primitives under `src/components/ui/**` and compose in `src/components/**`.
+- Prefer server components by default; mark client components with `'use client'` only when necessary.
+- Use the TRPC client from [apps/web/src/utils/trpc.ts](mdc:apps/web/src/utils/trpc.ts) for API calls; do not hardcode server URLs.
+- Keep accessibility in mind: label controls, keyboard navigation, and ARIA where needed.
+- For theming, use the `theme-provider` and `mode-toggle` components; avoid duplicating theme logic.
+- Keep loading skeletons and spinners in `components/ui` or `components/loader.tsx`.

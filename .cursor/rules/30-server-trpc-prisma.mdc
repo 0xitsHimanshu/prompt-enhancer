@@ -1,0 +1,13 @@
+---
+globs: apps/server/**.ts
+---
+# Server (tRPC, Prisma, Next Route Handlers)
+
+- Define procedures in [apps/server/src/routers/index.ts](mdc:apps/server/src/routers/index.ts) and sub-routers as needed.
+- Initialize tRPC in [apps/server/src/lib/trpc.ts](mdc:apps/server/src/lib/trpc.ts) with context from [apps/server/src/lib/context.ts](mdc:apps/server/src/lib/context.ts).
+- Expose the tRPC handler via [apps/server/src/app/trpc/[trpc]/route.ts](mdc:apps/server/src/app/trpc/[trpc]/route.ts).
+- Access the database via [apps/server/src/db/index.ts](mdc:apps/server/src/db/index.ts); avoid direct Prisma client instantiation elsewhere.
+- Update schema in [apps/server/prisma/schema/schema.prisma](mdc:apps/server/prisma/schema/schema.prisma) and run migrations from the `server` app.
+- Validate inputs using `zod` and surface typed errors; avoid leaking raw DB errors.
+- Keep route handlers small; push logic into routers/services.
+- Prefer pure functions for business logic to simplify testing.

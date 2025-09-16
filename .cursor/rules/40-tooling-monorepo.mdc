@@ -1,0 +1,10 @@
+---
+alwaysApply: false
+---
+# Tooling & Monorepo Commands
+
+- Use Bun for scripts. Common commands are in [package.json](mdc:package.json) and app-level `package.json` files.
+- Prefer running commands from the repository root unless a script is app-specific.
+- Keep `turbo.json` tasks consistent; colocate build/test/lint config in each app.
+- When adding dependencies, scope them to the app where used; avoid unnecessary hoisting.
+- Document new scripts in the root [README.md](mdc:README.md).

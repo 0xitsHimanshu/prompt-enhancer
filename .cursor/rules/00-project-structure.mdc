@@ -1,0 +1,41 @@
+---
+alwaysApply: true
+---
+# Monorepo Project Structure Guide
+
+This repository is a Bun + Turborepo monorepo with two Next.js apps: a web client and a server API using tRPC and Prisma.
+
+## Top-level
+- Turborepo pipeline: [turbo.json](mdc:turbo.json)
+- Monorepo package manager: [bunfig.toml](mdc:bunfig.toml), [bun.lock](mdc:bun.lock)
+- Root package: [package.json](mdc:package.json)
+- Docs: [README.md](mdc:README.md)
+
+## Apps
+- Web (Next.js App Router, Tailwind, shadcn/ui): [apps/web/](mdc:apps/web/)
+  - Next config: [apps/web/next.config.ts](mdc:apps/web/next.config.ts)
+  - App root/layout: [apps/web/src/app/layout.tsx](mdc:apps/web/src/app/layout.tsx)
+  - Home page: [apps/web/src/app/page.tsx](mdc:apps/web/src/app/page.tsx)
+  - Styling entry: [apps/web/src/index.css](mdc:apps/web/src/index.css)
+  - TRPC client utils: [apps/web/src/utils/trpc.ts](mdc:apps/web/src/utils/trpc.ts)
+- Server (Next.js route handlers exposing tRPC, Prisma): [apps/server/](mdc:apps/server/)
+  - Next config: [apps/server/next.config.ts](mdc:apps/server/next.config.ts)
+  - App route (root): [apps/server/src/app/route.ts](mdc:apps/server/src/app/route.ts)
+  - tRPC route handler: [apps/server/src/app/trpc/[trpc]/route.ts](mdc:apps/server/src/app/trpc/[trpc]/route.ts)
+  - tRPC router entry: [apps/server/src/routers/index.ts](mdc:apps/server/src/routers/index.ts)
+  - tRPC init: [apps/server/src/lib/trpc.ts](mdc:apps/server/src/lib/trpc.ts)
+  - Context: [apps/server/src/lib/context.ts](mdc:apps/server/src/lib/context.ts)
+  - DB bootstrap: [apps/server/src/db/index.ts](mdc:apps/server/src/db/index.ts)
+  - Prisma schema: [apps/server/prisma/schema/schema.prisma](mdc:apps/server/prisma/schema/schema.prisma)
+  - Prisma config: [apps/server/prisma.config.ts](mdc:apps/server/prisma.config.ts)
+
+## Conventions
+- Use App Router in both apps; route handlers live under `src/app`.
+- Keep shared types at the router layer and consume them from the client via tRPC.
+- Prefer explicit imports and clear module boundaries between `web` and `server`.
+- Follow TypeScript and formatting guidance in the other rules.
+
+## Typical tasks
+- Web UI work: modify files under `apps/web/src/**` and use the tRPC client in `utils/trpc.ts`.
+- API endpoints: add procedures in `apps/server/src/routers/**` and expose via the tRPC route.
+- Database changes: update Prisma schema and run migrations from the `server` app.

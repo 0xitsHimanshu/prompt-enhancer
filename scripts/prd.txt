@@ -1,0 +1,168 @@
+# Overview  
+The Prompt Enhancer is a developer tool that integrates into **VS Code** and **browsers** to automatically improve raw prompts written by users. Instead of requiring users to manually refine their prompts, the extension provides a **one-click enhancement experience** powered by AI. This eliminates friction, saves time, and ensures higher-quality outputs across different LLMs (LLM-agnostic).  
+
+The product is for:
+
+* Developers writing prompts in VS Code (e.g., for Copilot, Cursor, or agentic coding tools).
+* Researchers, marketers, and power users drafting prompts in web tools or web apps.
+* Teams who want consistent, high-quality prompts without training everyone on prompt engineering.
+
+It’s valuable because it makes **prompt writing effortless and standardized**, improves outcomes, and reduces time wasted in prompt iteration.
+
+# Core Features
+
+1. **One-click AI Prompt Enhancement**
+
+   * Users type a raw prompt → click the “Enhance” button → prompt is rewritten by an AI model.
+   * Ensures the prompt is clear, structured, and optimized for LLMs.
+   * Works without copy-pasting between apps.
+
+2. **Multi-environment support (VS Code + Browser Extension)**
+
+   * Works seamlessly inside VS Code (integrated into chat panels).
+   * Browser extension provides right-click → “Enhance with AI”.
+   * Both use the same backend service for enhancements.
+
+3. **LLM-Agnostic Backend API**
+
+   * Enhancements are powered by a backend API that can switch between OpenAI, Anthropic, local models, etc.
+   * Provides flexibility and future-proofing.
+
+4. **Prompt History (Optional for MVP, Core for Growth)**
+
+   * Stores user’s raw and enhanced prompts in a database.
+   * Useful for reviewing, reusing, or comparing improvements.
+
+5. **Customizable Enhancement Styles (Future)**
+
+   * Users can select enhancement goals: “Concise,” “Detailed,” “Professional,” “Creative.”
+   * Provides flexibility depending on task.
+
+# User Experience
+
+* **Persona 1 – Developer**: Writes quick comments or feature requests in VS Code Copilot chat. Instead of manually refining prompts, clicks “Enhance” → gets a better version instantly.
+* **Persona 2 – Researcher/Marketer**: Drafts rough prompts in browser-based AI apps. Right-click → “Enhance with AI” → enhanced prompt appears, ready to paste.
+
+**Key User Flows**:
+
+1. VS Code → User writes raw prompt in Copilot → clicks “Enhance” → AI-enhanced prompt replaces or previews.
+2. Browser → User highlights text → right-click “Enhance with AI” → result shown in popup or replaces text.
+3. Playground (Web UI) → User tests enhancement features, sees raw vs enhanced side-by-side.
+
+**UI/UX Considerations**:
+
+* Always **one-click action** (no unnecessary copy-paste).
+* Provide **preview + accept/replace** workflow.
+* Minimal UI footprint (don’t clutter VS Code or browser).
+
+  </context>  
+
+---
+
+<PRD>  
+# Technical Architecture  
+
+**System Components**
+
+* **Frontend (Web Playground)**: Next.js app to test enhancements.
+* **VS Code Extension**: Injects “Enhance” button in Copilot/Chat panels, calls API.
+* **Browser Extension**: Adds right-click context action, calls API.
+* **Backend API**: tRPC/Next.js API that handles prompt enhancement requests.
+* **AI Service Layer**: Connects to LLM providers (OpenAI, Anthropic, local models).
+* **Database (Postgres + Prisma)**: Stores prompt logs (raw, enhanced, metadata).
+
+**Data Models (Prisma)**
+
+```prisma
+model PromptLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  raw       String
+  enhanced  String
+  model     String
+  createdAt DateTime @default(now())
+}
+```
+
+**APIs & Integrations**
+
+* `/api/enhance` → accepts `{ prompt: string, model?: string }` → returns `{ enhanced: string }`.
+* Future: `/api/history` → fetch stored logs.
+
+**Infrastructure Requirements**
+
+* Monorepo via Turborepo (Better-T-Stack).
+* Postgres for persistence.
+* Deployed backend on Vercel/Render/Fly.io.
+* Extensions communicate with backend via HTTPS.
+
+---
+
+# Development Roadmap
+
+**MVP Requirements**
+
+1. Backend API (`/api/enhance`) using OpenAI or Anthropic.
+2. Web Playground to test raw vs enhanced.
+3. VS Code extension with “Enhance” button in chat panel.
+4. Browser extension with context-menu → “Enhance with AI.”
+
+**Future Enhancements**
+
+* Prompt history with database storage.
+* Multiple enhancement styles (concise, detailed, professional, creative).
+* User accounts with personalization.
+* Offline/local LLM support (llama.cpp, Ollama).
+* Collaboration features (team prompt libraries).
+
+---
+
+# Logical Dependency Chain
+
+1. **Foundation**
+
+   * Backend API with AI integration.
+   * Playground frontend to test API.
+
+2. **Visible MVP**
+
+   * VS Code extension → single-click enhance.
+   * Browser extension → context menu enhance.
+
+3. **Enhancements**
+
+   * Store logs in DB.
+   * Add user accounts and preferences.
+
+4. **Growth**
+
+   * Style customization.
+   * Advanced analytics + team collaboration.
+
+---
+
+# Risks and Mitigations
+
+* **Technical Challenges**: Integrating AI APIs reliably. → Mitigation: abstract provider layer.
+* **MVP Scoping**: Risk of overbuilding. → Mitigation: MVP = one-click enhance only, no history.
+* **Resource Constraints**: API costs. → Mitigation: allow provider swap (OpenAI ↔ local model).
+* **Extension UX Complexity**: VS Code API limitations. → Mitigation: Start with injected button → iterate.
+
+---
+
+# Appendix
+
+* **Research Findings**: Users dislike manual prompt refining → want quick assistive tools.
+* **Technical Specs**:
+
+  * Next.js 15 App Router for frontend + backend.
+  * Prisma + Postgres DB.
+  * TRPC for type-safe API.
+  * Bun runtime + Turborepo structure.
+* **LLM Providers to Support**:
+
+  * OpenAI GPT-4.1
+  * Anthropic Claude 3.5
+  * Local models via Ollama (future).
+
+</PRD>  

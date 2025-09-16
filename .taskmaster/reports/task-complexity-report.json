@@ -1,0 +1,93 @@
+{
+	"meta": {
+		"generatedAt": "2025-09-16T09:13:47.310Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 10,
+		"analysisCount": 10,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Initialize Monorepo and Project Structure",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down into setting up Turborepo, configuring Next.js and Prisma, initializing Postgres, and verifying builds.",
+			"reasoning": "This task involves multiple technologies and configurations, requiring careful setup and verification."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Implement Backend API for Prompt Enhancement",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Subtasks should include setting up tRPC, integrating with OpenAI and Anthropic, implementing the abstraction layer, unit testing, and integration testing.",
+			"reasoning": "This task involves complex API integration and abstraction layer design, requiring multiple subtasks for each integration and testing phase."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Develop Web Playground Frontend",
+			"complexityScore": 7,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Subtasks should include designing the UI, implementing the enhance workflow, and conducting end-to-end tests.",
+			"reasoning": "This task involves UI design and integration with the backend API, but is relatively straightforward compared to other tasks."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Create VS Code Extension with Enhance Button",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Subtasks should include scaffolding the extension, integrating with the backend API, implementing UI components, and testing the extension.",
+			"reasoning": "This task involves specific VS Code API integration and UI design, requiring several subtasks for setup and testing."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Develop Browser Extension for Context Menu Enhancement",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Subtasks should include setting up the extension framework, implementing context menu functionality, integrating with the backend API, and testing across browsers.",
+			"reasoning": "This task involves browser-specific development and API integration, requiring multiple subtasks for each browser and testing phase."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement AI Service Provider Abstraction Layer",
+			"complexityScore": 8,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Subtasks should include designing the provider interface, implementing adapters for OpenAI and Anthropic, and unit testing the abstraction layer.",
+			"reasoning": "This task involves designing an abstraction layer and implementing adapters, which requires careful planning and testing."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Integrate Prompt Logging with Prisma and Postgres",
+			"complexityScore": 6,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Subtasks should include extending the backend API for logging and testing database writes.",
+			"reasoning": "This task involves straightforward database integration and testing, making it less complex than other tasks."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Design and Implement Minimal UI/UX for Extensions",
+			"complexityScore": 5,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Subtasks should include reviewing extension UIs for minimalism and implementing consistent workflows.",
+			"reasoning": "This task focuses on UI design principles and consistency, which is relatively simpler compared to other technical tasks."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Setup Deployment Pipeline for Backend and Extensions",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Subtasks should include setting up CI/CD for the backend, automating extension packaging, and testing deployment flows.",
+			"reasoning": "This task involves complex deployment configurations across multiple platforms, requiring detailed setup and testing."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Document API, Extensions, and Developer Setup",
+			"complexityScore": 4,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Subtasks should include writing comprehensive documentation and peer reviewing for clarity.",
+			"reasoning": "This task involves documentation, which is essential but generally less complex than development tasks."
+		}
+	]
+}

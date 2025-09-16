@@ -1,0 +1,15 @@
+---
+globs: *.ts,*.tsx
+---
+# TypeScript Style and Conventions
+
+- Prefer explicit types for exported APIs and function signatures.
+- Avoid `any`; use discriminated unions and generics when possible.
+- Use meaningful names; avoid abbreviations. Functions are verbs, variables are nouns.
+- Use early returns and handle edge cases first.
+- Keep try/catch minimal and purposeful; never swallow errors.
+- Match existing formatting; avoid unrelated reformatting in edits.
+- Keep comments short and purposeful; explain "why", not "how".
+- Avoid deep nesting beyond 2–3 levels; extract helpers.
+- In React components, type props with interfaces and return `JSX.Element`.
+- Prefer `zod` or router-inferred types from tRPC procedures where applicable.
