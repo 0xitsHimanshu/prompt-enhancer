@@ -1,0 +1,88 @@
+{
+  "name": "prompt-enhancer-vscode",
+  "displayName": "Prompt Enhancer",
+  "publisher": "your-publisher",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://example.com/your/repo.git"
+  },
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other", "Programming Languages", "Productivity"],
+  "keywords": ["ai", "openai", "enhance", "prompts"],
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#0ea5e9",
+    "theme": "dark"
+  },
+  "activationEvents": ["onCommand:promptEnhancer.enhanceSelection"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "promptEnhancer.enhanceSelection",
+        "title": "Prompt Enhancer: Enhance Selection",
+        "category": "Prompt Enhancer",
+        "icon": "$(sparkle)"
+      }
+    ],
+    "menus": {
+        "editor/context": [
+        {
+          "command": "promptEnhancer.enhanceSelection",
+          "when": "editorHasSelection || editorTextFocus",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+            "command": "promptEnhancer.enhanceSelection",
+            "group": "navigation",
+            "when": "editorTextFocus || editorHasSelection" 
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Prompt Enhancer",
+      "properties": {
+        "promptEnhancer.apiBaseUrl": {
+          "type": "string",
+          "default": "http://localhost:3000",
+          "description": "Base URL of the backend API (e.g., http://localhost:3000)"
+        },
+        "promptEnhancer.model": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "description": "Default model hint passed to the backend (optional)"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "promptEnhancer.enhanceSelection",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "images/icon.png"
+  ],
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js",
+    "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --watch",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.4.0",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {}
+}

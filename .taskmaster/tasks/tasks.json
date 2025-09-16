@@ -89,7 +89,7 @@
         "dependencies": [
           2
         ],
-        "status": "in-progress",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -130,7 +130,7 @@
               "3.3"
             ],
             "details": "Test inputting a raw prompt, enhancing it, previewing, accepting, and replacing. Validate responsiveness and minimal UI footprint across devices.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -145,8 +145,94 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scaffold Extension and Build Pipeline",
+            "description": "Use the Yeoman generator to scaffold a new TypeScript VS Code extension project and set up the build pipeline with esbuild for bundling.",
+            "dependencies": [],
+            "details": "Run `yo code` to generate the extension structure. Configure esbuild for efficient TypeScript bundling and ensure compatibility with VS Code web extensions.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Enhance Command via REST API",
+            "description": "Create a command that sends the current selection or prompt to the `/api/enhance` REST endpoint and handles the enhanced response.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Register a VS Code command that captures the current prompt, sends it to the backend API, and processes the enhanced result for display or replacement.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Add or Reuse /api/enhance REST Endpoint",
+            "description": "Ensure the backend provides a working `/api/enhance` endpoint for prompt enhancement, or reuse the existing implementation.",
+            "dependencies": [],
+            "details": "Verify that the backend API is accessible and returns enhanced prompts as expected for integration with the extension.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Add Extension Settings for API Base URL and Model",
+            "description": "Implement configuration contributions to allow users to set the API base URL and select the enhancement model from VS Code settings.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Define configuration schema in `package.json` and provide UI for users to input API details and model preferences.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Add Keybinding and Status Bar Button for Quick Access",
+            "description": "Register a keyboard shortcut and add a status bar button to trigger the enhance command for improved usability.",
+            "dependencies": [
+              "4.2"
+            ],
+            "details": "Update `package.json` to define a keybinding and implement a status bar item that invokes the enhance functionality.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Add README, Packaging, and Licensing",
+            "description": "Write a README with usage instructions, configure `.vscodeignore`, and add a LICENSE file. Prepare the extension for packaging with vsce.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Document installation and usage, exclude unnecessary files from the package, and ensure licensing compliance.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Add Icon, Categories, and Marketplace Metadata",
+            "description": "Polish the extension's presentation by adding an icon, setting categories, and completing all required marketplace metadata.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Update `package.json` with icon path, categories, display name, and other metadata for marketplace publishing.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Optional: CI Publish Workflow (GitHub Actions)",
+            "description": "Set up a GitHub Actions workflow to automate building, testing, and publishing the extension to the VS Code Marketplace.",
+            "dependencies": [
+              "4.6",
+              "4.7"
+            ],
+            "details": "Create a workflow file that runs tests, builds the extension, and publishes it using a secure token when changes are merged to main.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 5,
@@ -241,7 +327,7 @@
     ],
     "metadata": {
       "created": "2025-09-16T09:10:26.908Z",
-      "updated": "2025-09-16T09:52:45.152Z",
+      "updated": "2025-09-16T11:10:15.026Z",
       "description": "Tasks for master context"
     }
   }
