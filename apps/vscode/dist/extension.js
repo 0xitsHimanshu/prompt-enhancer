@@ -35,18 +35,32 @@ __export(extension_exports, {
 });
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
-async function enhance(prompt, model) {
+function getApiBaseUrl() {
   const config = vscode.workspace.getConfiguration("promptEnhancer");
-  const baseUrl = config.get("apiBaseUrl") || process.env.VSCODE_ENHANCER_API || process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
-  const modelPref = model || config.get("model") || void 0;
+  const customUrl = config.get("apiBaseUrl");
+  if (customUrl && customUrl.trim()) {
+    return customUrl.trim();
+  }
+  const envUrl = process.env.VSCODE_ENHANCER_API || process.env.NEXT_PUBLIC_SERVER_URL;
+  if (envUrl && envUrl.trim()) {
+    return envUrl.trim();
+  }
+  const productionUrl = config.get("productionApiUrl") || "https://prompt-enhancer.vercel.app";
+  return productionUrl;
+}
+function getModelPreference() {
+  const config = vscode.workspace.getConfiguration("promptEnhancer");
+  return config.get("model") || void 0;
+}
+async function enhance(prompt, model) {
+  const baseUrl = getApiBaseUrl();
+  const modelPref = model || getModelPreference();
   const res = await fetch(`${baseUrl}/api/enhance`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt, model: modelPref })
   });
-  if (!res.ok) {
-    throw new Error(await res.text());
-  }
+  if (!res.ok) throw new Error(await res.text());
   const data = await res.json();
   if (!data.enhanced) throw new Error("No enhanced text returned");
   return data.enhanced;
@@ -63,31 +77,57 @@ async function runEnhanceCommand() {
     return;
   }
   try {
-    vscode.window.setStatusBarMessage("Enhancing selection...", 2e3);
+    const loadingMessage = vscode.window.setStatusBarMessage("$(loading~spin) Enhancing selection...");
     const enhanced = await enhance(selection);
-    editor.edit((builder) => {
-      if (editor.selection.isEmpty) {
-        const fullRange = new vscode.Range(
-          editor.document.positionAt(0),
-          editor.document.positionAt(editor.document.getText().length)
-        );
-        builder.replace(fullRange, enhanced);
-      } else {
-        builder.replace(editor.selection, enhanced);
-      }
+    loadingMessage.dispose();
+    const originalText = selection;
+    const selectionRange = editor.selection.isEmpty ? new vscode.Range(editor.document.positionAt(0), editor.document.positionAt(editor.document.getText().length)) : editor.selection;
+    await editor.edit((builder) => {
+      builder.replace(selectionRange, enhanced);
     });
-    vscode.window.showInformationMessage("Enhanced selection");
+    const addedDecoration = vscode.window.createTextEditorDecorationType({
+      backgroundColor: new vscode.ThemeColor("diffEditor.insertedTextBackground"),
+      border: "1px solid rgba(76, 175, 80, 0.3)",
+      borderRadius: "2px"
+    });
+    const removedDecoration = vscode.window.createTextEditorDecorationType({
+      backgroundColor: new vscode.ThemeColor("diffEditor.removedTextBackground"),
+      border: "1px solid rgba(244, 67, 54, 0.3)",
+      borderRadius: "2px",
+      textDecoration: "line-through"
+    });
+    const enhancedRange = new vscode.Range(selectionRange.start, editor.document.positionAt(editor.document.offsetAt(selectionRange.start) + enhanced.length));
+    editor.setDecorations(addedDecoration, [enhancedRange]);
+    const action = await vscode.window.showInformationMessage(
+      "\u2728 AI Enhancement applied!",
+      {
+        modal: false,
+        detail: `Original: ${originalText.length} chars \u2192 Enhanced: ${enhanced.length} chars`
+      },
+      "Keep Enhancement",
+      "Revert to Original"
+    );
+    addedDecoration.dispose();
+    removedDecoration.dispose();
+    if (action === "Revert to Original") {
+      await editor.edit((builder) => {
+        builder.replace(enhancedRange, originalText);
+      });
+      vscode.window.setStatusBarMessage("$(close) Reverted to original", 3e3);
+    } else {
+      vscode.window.setStatusBarMessage("$(check) Enhancement kept", 3e3);
+    }
   } catch (err) {
     vscode.window.showErrorMessage(`Enhance failed: ${err?.message ?? err}`);
   }
 }
 function activate(context) {
-  const disposable = vscode.commands.registerCommand("promptEnhancer.enhanceSelection", runEnhanceCommand);
-  context.subscriptions.push(disposable);
+  const enhanceDisposable = vscode.commands.registerCommand("promptEnhancer.enhanceSelection", runEnhanceCommand);
+  context.subscriptions.push(enhanceDisposable);
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  status.text = "$(sparkle) Enhance";
+  status.text = "$(sparkle)";
   status.command = "promptEnhancer.enhanceSelection";
-  status.tooltip = "Enhance Selection";
+  status.tooltip = "Enhance Selection with AI";
   status.show();
   context.subscriptions.push(status);
 }

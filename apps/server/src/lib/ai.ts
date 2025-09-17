@@ -1,12 +1,14 @@
 import { TRPCError } from "@trpc/server";
 import OpenAI from "openai";
+import { logEnhancement } from "./logger";
 
 export type EnhanceParams = {
 	prompt: string;
 	model?: string;
+	userId?: string;
 };
 
-export async function enhanceWithAI({ prompt, model }: EnhanceParams): Promise<{ enhanced: string }> {
+export async function enhanceWithAI({ prompt, model, userId }: EnhanceParams): Promise<{ enhanced: string }> {
 	const apiKey = process.env.OPENAI_API_KEY;
 	if (!apiKey) {
 		throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "OPENAI_API_KEY is not set" });
@@ -49,6 +51,17 @@ export async function enhanceWithAI({ prompt, model }: EnhanceParams): Promise<{
 		if (!enhanced) {
 			throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "OpenAI returned no content" });
 		}
+
+		// Log the enhancement to database (non-blocking)
+		logEnhancement({
+			userId,
+			rawPrompt: prompt,
+			enhanced,
+			model: targetModel,
+		}).catch((error) => {
+			console.error("Failed to log enhancement:", error);
+		});
+
 		return { enhanced };
 	} catch (err: any) {
 		const message = err?.message ?? "OpenAI SDK error";

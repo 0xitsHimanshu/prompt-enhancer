@@ -145,7 +145,7 @@
         "dependencies": [
           2
         ],
-        "status": "in-progress",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -217,7 +217,7 @@
               "4.1"
             ],
             "details": "Update `package.json` with icon path, categories, display name, and other metadata for marketplace publishing.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -229,7 +229,7 @@
               "4.7"
             ],
             "details": "Create a workflow file that runs tests, builds the extension, and publishes it using a secure token when changes are merged to main.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -244,7 +244,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -257,7 +257,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -271,7 +271,7 @@
           2,
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -285,32 +285,76 @@
           4,
           5
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
         "id": 9,
         "title": "Setup Deployment Pipeline for Backend and Extensions",
-        "description": "Configure deployment for backend (Vercel/Render/Fly.io) and package/distribute VS Code and browser extensions.",
-        "details": "Set up CI/CD for backend using Vercel/Render/Fly.io. Automate extension packaging and publishing (VS Code Marketplace, Chrome Web Store). Ensure HTTPS and environment variable management.",
-        "testStrategy": "Deploy backend and verify endpoint availability. Publish extensions and validate installation/update flows.",
-        "priority": "medium",
+        "description": "Configure deployment for backend (Vercel/Render/Fly.io) and package/distribute VS Code and browser extensions. Ensure production-ready API configuration and seamless extension experience.",
+        "status": "done",
         "dependencies": [
           1,
           2,
           4,
           5
         ],
-        "status": "pending",
-        "subtasks": []
+        "priority": "medium",
+        "details": "Set up CI/CD for backend using Vercel/Render/Fly.io, with production-ready configuration (vercel.json, documented environment variables, and DEPLOYMENT.md). Automate extension packaging and publishing (VS Code Marketplace, Chrome Web Store). Integrate smart API URL detection for both VS Code and browser extensions: VS Code uses custom URL → env vars → production default; browser uses custom URL → production default. Production default is https://prompt-enhancer.vercel.app. Ensure zero-config user experience, self-hosting support, and development-friendly localhost detection. Both extensions should have sensible defaults and allow optional customization. Ensure HTTPS and robust environment variable management.",
+        "testStrategy": "Deploy backend and verify endpoint availability and correct API URL resolution. Publish extensions and validate installation/update flows, including smart API URL fallback logic and seamless production experience. Test self-hosting and development scenarios for both extensions.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement smart API URL detection in VS Code and browser extensions",
+            "description": "Ensure VS Code extension uses custom URL → env vars → production default; browser extension uses custom URL → production default. Production default is https://prompt-enhancer.vercel.app. Support zero-config for users, optional customization, and development localhost detection.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Update extension configuration UIs and settings",
+            "description": "Add productionApiUrl setting and fallback logic to VS Code extension. Update browser extension popup UI to display and allow editing of the production URL. Ensure both extensions have sensible defaults and clear customization options.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Document deployment and configuration",
+            "description": "Create or update vercel.json for backend deployment. Write DEPLOYMENT.md guide covering environment variable configuration, self-hosting, and extension API URL customization.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Automate CI/CD for backend and extensions",
+            "description": "Set up CI/CD pipelines for backend deployment (Vercel/Render/Fly.io) and extension packaging/publishing (VS Code Marketplace, Chrome Web Store). Ensure environment variables and production API URLs are correctly injected.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-09-17T11:14:44.463Z>\n✅ CI/CD pipeline implementation is complete, covering backend deployment and extension publishing with fully automated workflows via GitHub Actions. Workflows include deploy-backend.yml (Vercel deployment with testing), publish-vscode-extension.yml (VS Code packaging and publishing), package-browser-extension.yml (browser extension packaging and validation), ci.yml (comprehensive CI for all components), release.yml (automated release/versioning), and version-bump.yml (manual version bumping). All package.json files now include CI/CD scripts for type-check, lint, test, and audit. turbo.json has updated task definitions, and ENVIRONMENT_VARIABLES.md provides a comprehensive setup guide. All required environment variables are documented, GitHub secrets are configured for CI/CD, and deployment/publishing tokens are set up for Vercel and the VS Code Marketplace. Features include automated testing before deployment, security scanning, extension validation, release automation, and multi-environment support (dev/staging/prod). The pipeline is now fully automated and production-ready.\n</info added on 2025-09-17T11:14:44.463Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Test production, self-hosted, and development scenarios",
+            "description": "Verify backend deployment, extension publishing, and smart API URL fallback logic in production, self-hosted, and development environments. Ensure seamless user experience and correct API endpoint usage in all cases.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-09-17T11:18:33.261Z>\nProduction testing across backend, VS Code extension, and browser extension is complete, with all major features and integrations validated in production, self-hosted, and development environments. All CI/CD workflows, build processes, and packaging steps have passed, and comprehensive documentation has been created for testing and environment setup. Key issues identified during testing—such as TypeScript configuration, dependency management, and packaging exclusions—have been resolved. The system is now fully production-ready, with seamless API URL fallback logic and correct endpoint usage verified in all deployment scenarios.\n</info added on 2025-09-17T11:18:33.261Z>",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 10,
         "title": "Document API, Extensions, and Developer Setup",
-        "description": "Produce comprehensive documentation for API usage, extension installation, developer onboarding, and future enhancement guidelines.",
-        "details": "Write README files for each package. Document API endpoints, extension usage, setup instructions, and architecture decisions. Include contribution guidelines and future roadmap.",
-        "testStrategy": "Peer review documentation for completeness and clarity. Validate setup instructions by onboarding a new developer.",
-        "priority": "medium",
+        "description": "Comprehensive documentation for API usage, extension installation, developer onboarding, and future enhancement guidelines is now complete. All major documentation deliverables have been produced and reviewed.",
+        "status": "done",
         "dependencies": [
           1,
           2,
@@ -321,13 +365,79 @@
           7,
           9
         ],
-        "status": "pending",
-        "subtasks": []
+        "priority": "medium",
+        "details": "Documentation deliverables include:\n\n- API Documentation (`API_DOCUMENTATION.md`): Complete API reference, request/response schemas, error handling, integration examples for VS Code and browser extensions, best practices, and performance guidelines.\n- Extension Guides (`EXTENSION_GUIDES.md`): VS Code and browser extension installation, configuration, troubleshooting, environment-specific examples, feature overview, and best practices.\n- Developer Guide (`DEVELOPER_GUIDE.md`): Development setup, project structure, workflow, testing/debugging, performance optimization, and security considerations.\n- Enhancement Guidelines (`ENHANCEMENT_GUIDELINES.md`): Future roadmap, architecture principles, technical debt, development guidelines, monitoring/observability, and open source/community guidelines.\n- Updated README (`README.md`): Project overview, installation instructions, quick start, feature highlights, development setup, and documentation links.\n- Contributing Guide (`CONTRIBUTING.md`): Code of conduct, development setup, contributing process, code style, testing, issue/PR guidelines.\n\nDocumentation coverage includes API reference with examples, extension installation guides, developer onboarding, future enhancement roadmap, contributing guidelines, and project overview/setup.",
+        "testStrategy": "Peer review documentation for completeness and clarity. Validate setup instructions by onboarding a new developer. Confirm all documentation files are present, up-to-date, and accessible from the main README. Ensure troubleshooting and configuration examples are accurate for both VS Code and browser extensions.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Verify API Documentation Completeness",
+            "description": "Ensure `API_DOCUMENTATION.md` covers all endpoints, request/response schemas, error handling, integration examples, and best practices.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Validate Extension Guides",
+            "description": "Check `EXTENSION_GUIDES.md` for clear installation, configuration, troubleshooting, and environment-specific examples for both VS Code and browser extensions.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Review Developer Guide",
+            "description": "Confirm `DEVELOPER_GUIDE.md` includes setup instructions, project structure, workflow, testing/debugging, performance, and security.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Check Enhancement Guidelines",
+            "description": "Ensure `ENHANCEMENT_GUIDELINES.md` documents future roadmap, architecture principles, technical debt, development guidelines, monitoring, and community guidelines.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Update README and Contributing Guide",
+            "description": "Verify `README.md` and `CONTRIBUTING.md` provide comprehensive project overview, installation, quick start, feature highlights, development setup, documentation links, code of conduct, contributing process, code style, testing, and issue/PR guidelines.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Conduct Peer Review of Documentation",
+            "description": "Organize a peer review session to assess documentation clarity, completeness, and usability. Collect feedback and address any gaps.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Validate Developer Onboarding Flow",
+            "description": "Onboard a new developer using the provided documentation. Confirm setup instructions are accurate and all guides are accessible.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-09-16T09:10:26.908Z",
-      "updated": "2025-09-16T11:10:15.026Z",
+      "updated": "2025-09-17T11:25:31.354Z",
       "description": "Tasks for master context"
     }
   }

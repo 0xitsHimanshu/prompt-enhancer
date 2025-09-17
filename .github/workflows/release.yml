@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build all packages
+        run: bun run build
+
+      - name: Package VS Code extension
+        working-directory: apps/vscode
+        run: |
+          npm ci
+          npm run build
+          npm run package
+
+      - name: Package browser extension
+        run: |
+          cd apps/browser
+          zip -r browser-extension-${{ github.ref_name }}.zip . -x "*.git*" "*.DS_Store*"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            apps/vscode/*.vsix
+            apps/browser/browser-extension-${{ github.ref_name }}.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish VS Code Extension
+        working-directory: apps/vscode
+        run: |
+          npm install -g vsce
+          vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}

@@ -1,0 +1,71 @@
+name: Publish VS Code Extension
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/vscode/**'
+      - '.github/workflows/publish-vscode-extension.yml'
+  release:
+    types: [published]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/vscode/package-lock.json
+
+      - name: Install dependencies
+        working-directory: apps/vscode
+        run: npm ci
+
+      - name: Build extension
+        working-directory: apps/vscode
+        run: npm run build
+
+      - name: Package extension
+        working-directory: apps/vscode
+        run: npm run package
+
+      - name: Upload extension package
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension-package
+          path: apps/vscode/*.vsix
+
+      - name: Publish to VS Code Marketplace
+        if: github.event_name == 'release'
+        working-directory: apps/vscode
+        run: |
+          npm install -g vsce
+          vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+
+  test-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: apps/vscode
+        run: npm ci
+
+      - name: Run extension tests
+        working-directory: apps/vscode
+        run: npm test
+        continue-on-error: true

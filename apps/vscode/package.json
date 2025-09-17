@@ -8,7 +8,9 @@
     "url": "https://example.com/your/repo.git"
   },
   "license": "MIT",
-  "engines": { "vscode": "^1.85.0" },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
   "categories": ["Other", "Programming Languages", "Productivity"],
   "keywords": ["ai", "openai", "enhance", "prompts"],
   "icon": "images/icon.png",
@@ -28,7 +30,7 @@
       }
     ],
     "menus": {
-        "editor/context": [
+      "editor/context": [
         {
           "command": "promptEnhancer.enhanceSelection",
           "when": "editorHasSelection || editorTextFocus",
@@ -37,9 +39,9 @@
       ],
       "editor/title": [
         {
-            "command": "promptEnhancer.enhanceSelection",
-            "group": "navigation",
-            "when": "editorTextFocus || editorHasSelection" 
+          "command": "promptEnhancer.enhanceSelection",
+          "group": "navigation",
+          "when": "editorTextFocus || editorHasSelection"
         }
       ]
     },
@@ -48,8 +50,13 @@
       "properties": {
         "promptEnhancer.apiBaseUrl": {
           "type": "string",
-          "default": "http://localhost:3000",
-          "description": "Base URL of the backend API (e.g., http://localhost:3000)"
+          "default": "",
+          "description": "Custom API base URL (leave empty to use production default: https://prompt-enhancer.vercel.app)"
+        },
+        "promptEnhancer.productionApiUrl": {
+          "type": "string",
+          "default": "https://prompt-enhancer.vercel.app",
+          "description": "Production API base URL (used when apiBaseUrl is empty)"
         },
         "promptEnhancer.model": {
           "type": "string",
@@ -76,13 +83,21 @@
   "scripts": {
     "build": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js",
     "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --watch",
-    "package": "vsce package"
+    "package": "vsce package",
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'No linting configured yet'",
+    "test": "echo 'No tests configured yet'",
+    "audit": "npm audit"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
     "esbuild": "^0.24.0",
     "typescript": "^5.4.0",
     "vsce": "^2.15.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/diff": "^8.0.0",
+    "diff": "^8.0.2"
+  }
 }

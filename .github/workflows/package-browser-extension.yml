@@ -1,0 +1,82 @@
+name: Package Browser Extension
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/browser/**'
+      - '.github/workflows/package-browser-extension.yml'
+  release:
+    types: [published]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Package browser extension
+        run: |
+          cd apps/browser
+          zip -r browser-extension.zip . -x "*.git*" "*.DS_Store*"
+          echo "Browser extension packaged successfully"
+
+      - name: Upload browser extension package
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-extension-package
+          path: apps/browser/browser-extension.zip
+
+      - name: Create release assets
+        if: github.event_name == 'release'
+        run: |
+          cd apps/browser
+          cp browser-extension.zip ../../browser-extension-${{ github.event.release.tag_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate manifest.json
+        run: |
+          cd apps/browser
+          python3 -c "
+          import json
+          import sys
+          try:
+              with open('manifest.json', 'r') as f:
+                  manifest = json.load(f)
+              print('✅ manifest.json is valid JSON')
+              
+              # Check required fields
+              required_fields = ['manifest_version', 'name', 'version', 'permissions']
+              for field in required_fields:
+                  if field not in manifest:
+                      print(f'❌ Missing required field: {field}')
+                      sys.exit(1)
+              print('✅ All required fields present')
+              
+          except json.JSONDecodeError as e:
+              print(f'❌ Invalid JSON in manifest.json: {e}')
+              sys.exit(1)
+          except Exception as e:
+              print(f'❌ Error validating manifest.json: {e}')
+              sys.exit(1)
+          "
+
+      - name: Check file structure
+        run: |
+          cd apps/browser
+          required_files=("manifest.json" "background.js" "content.js" "popup.html" "popup.js")
+          for file in "${required_files[@]}"; do
+              if [ ! -f "$file" ]; then
+                  echo "❌ Missing required file: $file"
+                  exit 1
+              fi
+          done
+          echo "✅ All required files present"
