@@ -42,23 +42,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '18'
+          bun-version: latest
 
       - name: Install dependencies
-        working-directory: apps/vscode
-        run: npm ci
+        run: bun install
 
       - name: Build extension
         working-directory: apps/vscode
-        run: npm run build
+        run: bun run build
 
       - name: Validate extension
         working-directory: apps/vscode
         run: |
-          npm install -g vsce
+          bun install -g vsce
           vsce ls
 
   test-browser-extension:
@@ -88,7 +87,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
       - name: Run security audit
         run: |
           bun audit
-          cd apps/vscode && npm audit --audit-level=moderate
+          cd apps/vscode && bun audit

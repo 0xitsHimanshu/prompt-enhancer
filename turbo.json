@@ -14,7 +14,7 @@
 			"dependsOn": ["^check-types"]
 		},
 		"type-check": {
-			"dependsOn": ["^type-check", "db:generate"]
+			"dependsOn": ["^type-check"]
 		},
 		"test": {
 			"dependsOn": ["^test"]
@@ -39,8 +39,7 @@
 			"persistent": true
 		},
 		"db:generate": {
-			"cache": false,
-			"persistent": true
+			"cache": false
 		}
 	}
 }
