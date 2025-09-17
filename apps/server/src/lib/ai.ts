@@ -63,8 +63,8 @@ export async function enhanceWithAI({ prompt, model, userId }: EnhanceParams): P
 		});
 
 		return { enhanced };
-	} catch (err: any) {
-		const message = err?.message ?? "OpenAI SDK error";
+	} catch (err: unknown) {
+		const message = err instanceof Error ? err.message : "OpenAI SDK error";
 		throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message });
 	}
 }

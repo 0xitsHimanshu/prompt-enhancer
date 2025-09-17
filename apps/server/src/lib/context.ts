@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 
-export async function createContext(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function createContext(_req: NextRequest) {
 	// No auth configured
 	return {
 		session: null,

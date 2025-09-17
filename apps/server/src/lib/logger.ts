@@ -34,7 +34,13 @@ export async function logEnhancement({
 export async function getEnhancementHistory(
   userId?: string,
   limit: number = 50
-): Promise<any[]> {
+): Promise<Array<{
+  id: string;
+  rawPrompt: string;
+  enhanced: string;
+  model: string | null;
+  createdAt: Date;
+}>> {
   try {
     const enhancements = await prisma.promptEnhancement.findMany({
       where: userId ? { userId } : undefined,

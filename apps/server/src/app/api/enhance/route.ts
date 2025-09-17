@@ -20,8 +20,9 @@ export async function POST(req: NextRequest) {
 				'Access-Control-Allow-Headers': 'Content-Type',
 			}
 		});
-	} catch (error: any) {
-		return NextResponse.json({ error: error?.message ?? "Internal error" }, { 
+	} catch (error: unknown) {
+		const errorMessage = error instanceof Error ? error.message : "Internal error";
+		return NextResponse.json({ error: errorMessage }, { 
 			status: 500,
 			headers: {
 				'Access-Control-Allow-Origin': '*',
