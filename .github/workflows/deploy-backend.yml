@@ -32,8 +32,19 @@ jobs:
         run: bun install
 
       - name: Generate Prisma client
-        run: bun run db:generate
-        working-directory: apps/server
+        run: |
+          cd apps/server
+          echo "Current directory: $(pwd)"
+          echo "Listing files:"
+          ls -la
+          echo "Checking if prisma directory exists:"
+          ls -la prisma/ || echo "Prisma directory not found"
+          echo "Running Prisma generate..."
+          bun run db:generate
+          echo "Checking if client was generated:"
+          ls -la prisma/generated/ || echo "Generated directory not found"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run type checking
         run: bun run type-check
