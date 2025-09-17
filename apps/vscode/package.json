@@ -83,7 +83,7 @@
   "scripts": {
     "build": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js",
     "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --watch",
-    "package": "vsce package",
+    "package": "vsce package --no-dependencies",
     "type-check": "tsc --noEmit",
     "lint": "echo 'No linting configured yet'",
     "test": "echo 'No tests configured yet'",

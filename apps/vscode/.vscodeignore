@@ -12,7 +12,6 @@ src/**
 tsconfig.json
 esbuild.config.js
 .vscode/**
-.cursor/**
 .git/**
 .gitignore
 README.md
@@ -30,3 +29,6 @@ test/**
 *.test.js
 *.spec.js
 docs/**
+
+# Exclude parent directory files
+../**

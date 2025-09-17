@@ -23,6 +23,7 @@ jobs:
 
       - name: Generate Prisma client
         run: bun run db:generate
+        working-directory: apps/server
 
       - name: Run type checking
         run: bun run type-check

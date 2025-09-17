@@ -16,24 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: apps/vscode/package-lock.json
+          bun-version: latest
 
       - name: Install dependencies
-        working-directory: apps/vscode
-        run: npm ci
+        run: bun install
 
       - name: Build extension
         working-directory: apps/vscode
-        run: npm run build
+        run: bun run build
 
       - name: Package extension
         working-directory: apps/vscode
-        run: npm run package
+        run: vsce package --no-dependencies
 
       - name: Upload extension package
         uses: actions/upload-artifact@v4
@@ -45,7 +42,7 @@ jobs:
         if: github.event_name == 'release'
         working-directory: apps/vscode
         run: |
-          npm install -g vsce
+          bun install -g vsce
           vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
@@ -56,16 +53,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '18'
+          bun-version: latest
 
       - name: Install dependencies
-        working-directory: apps/vscode
-        run: npm ci
+        run: bun install
 
       - name: Run extension tests
         working-directory: apps/vscode
-        run: npm test
+        run: bun run test
         continue-on-error: true
