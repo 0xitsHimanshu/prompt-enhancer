@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "echo 'No tests configured yet'",
     "audit": "npm audit",
     "db:push": "prisma db push",
@@ -26,10 +26,15 @@
     "@prisma/extension-accelerate": "^2.0.2"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@next/eslint-plugin-next": "^15.5.3",
     "@types/node": "^20",
     "@types/react": "~19.1.10",
-    "zod": "^4.0.13",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prisma": "^6.15.0",
     "typescript": "^5",
-    "prisma": "^6.15.0"
+    "zod": "^4.0.13"
   }
 }
