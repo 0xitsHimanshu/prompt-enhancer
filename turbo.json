@@ -14,7 +14,7 @@
 			"dependsOn": ["^check-types"]
 		},
 		"type-check": {
-			"dependsOn": ["^type-check"]
+			"dependsOn": ["^type-check", "db:generate"]
 		},
 		"test": {
 			"dependsOn": ["^test"]
