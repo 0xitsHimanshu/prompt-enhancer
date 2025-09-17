@@ -28,6 +28,9 @@ jobs:
         working-directory: apps/vscode
         run: bun run build
 
+      - name: Install vsce globally
+        run: bun install -g vsce
+
       - name: Package extension
         working-directory: apps/vscode
         run: vsce package --no-dependencies
@@ -41,9 +44,7 @@ jobs:
       - name: Publish to VS Code Marketplace
         if: github.event_name == 'release'
         working-directory: apps/vscode
-        run: |
-          bun install -g vsce
-          vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        run: vsce publish --pat ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
 
